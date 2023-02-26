@@ -2,49 +2,67 @@
  * Стили компонента Modal
  */
 
-.Overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 1200;
-}
+/* // export class App extends Component {
+//     state = {
+//         images: [],
+//         isLoading: false,
+//         error: null,
+//         query: "",
+//         page: 1,
+//     }
 
-.Modal {
-  max-width: calc(100vw - 48px);
-  max-height: calc(100vh - 24px);
-}
+//     handleSubmit = (evt) => {
+//         console.log(evt)
+//         console.log(evt.query)
+//         this.setState({ query: evt.query })
+//         this.setState({ query: evt.query, page:1 }, () => {
+            this.handleImagesRequest();
+        })
 
-/*
-* Стили компонента Buton (Load more)
-*/
-.Button {
-  padding: 8px 16px;
-  border-radius: 2px;
-  background-color: #3f51b5;
-  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  text-align: center;
-  display: inline-block;
-  color: #fff;
-  border: 0;
-  text-decoration: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 18px;
-  line-height: 24px;
-  font-style: normal;
-  font-weight: 500;
-  min-width: 180px;
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-}
+//     }
 
-.Button:hover,
-.Button:focus {
-  background-color: #303f9f;
-}
+//     componentDidMount() {
+//         this.handleImagesRequest()
+//     }
+
+//     handleImagesRequest = async ({ searchQuery = this.state.query, currentPage = this.state.page }) => {
+//         this.setState({ isLoading: true });
+//         console.log(searchQuery);
+//         console.log(currentPage)
+//         try {
+//             const images = await fetchImages({ searchQuery, currentPage });
+//             this.setState({ images })
+//         } catch (error) {
+//             this.setState({ error: error.message })
+//         } finally {
+//             this.setState({ isLoading: false })
+//         }
+//     }
+
+//     handleClick = () => {
+//         const { query, page } = this.state;
+//         this.setState(prevState => ({ page: prevState.page + 1 }), () => {
+//             this.handleImagesRequest({ searchQuery: query, currentPage: page });
+//         });
+//     }
+
+//     componentDidUpdate(prevProps, prevState) {
+//         if (prevState.query !== this.state.query || prevState.page !== this.state.page) {
+//             this.handleImagesRequest({ searchQuery: this.state.query, currentPage: this.state.page })
+//         }
+//     }
+
+//     render() {
+//         console.log(this.state)
+//         const { images, isLoading, error } = this.state
+//         return (
+//             <StyledApp>
+//                 <StyledHeader>
+//                     <SearchBar handleSubmit={this.handleSubmit} />
+//                 </StyledHeader>
+//                 <ImageGallery images={images} />
+//                 {images.length > 0 && <StyledButton onClick={this.handleClick}>Load More</StyledButton>}
+//             </StyledApp>
+//         )
+//     }
+// } */
