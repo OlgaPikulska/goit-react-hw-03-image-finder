@@ -55,21 +55,48 @@ display: inline-block;
   font-size: 18px;
   }
 `
+const INITIAL_STATE = {
+  query: "",
+}
 
-export const SearchForm = () => {
+export class SearchBar extends Component {
+  state = { ...INITIAL_STATE };
+
+  handleChange = (e) => {
+    const { query, value } = e.target;
+    this.setState({ query: value })
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    this.props.handleSubmit({ ...this.state })
+    this.reset();
+    //form.reset();
+    // powyższa linijka usuwa zawartość inputa, można byłoby dodać w inpucie x, który usuwa zawartość na życzenie
+  }
+
+  reset = () => {
+    this.setState({ ...INITIAL_STATE })
+  }
+
+  render() {
     return (
-        <>
-            <StyledForm>
-                <StyledFormButton type="submit">
-                    <StyledButtonLabel>Search</StyledButtonLabel>
-                </StyledFormButton>
-                <StyledInput
-                    type="text"
-                    autocomplete="off"
-                    autofocus
-                    placeholder="Search images and photos"
-                />
-            </StyledForm>
-        </>
+      <>
+        <StyledForm onSubmit={this.handleSubmit}>
+          <StyledFormButton type="submit">
+            <StyledButtonLabel>Search</StyledButtonLabel>
+          </StyledFormButton>
+          <StyledInput
+            type="text"
+            autocomplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+            name="query"
+            onChange={this.handleChange}
+          />
+        </StyledForm>
+      </>
     )
+  }
 }

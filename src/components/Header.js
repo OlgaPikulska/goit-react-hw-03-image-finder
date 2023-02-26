@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import styled from "styled-components";
-import { SearchForm } from "./SearchForm";
 
-const StyledHeader = styled.header`
+import styled from "styled-components";
+
+
+export const StyledHeader = styled.header`
 top: 0;
   left: 0;
   position: sticky;
@@ -20,16 +20,3 @@ top: 0;
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 `
-
-
-export class Header extends Component {
-    render() {
-        return (
-            <>
-                <StyledHeader>
-                    <SearchForm></SearchForm>
-                </StyledHeader>
-            </>
-        )
-    }
-}

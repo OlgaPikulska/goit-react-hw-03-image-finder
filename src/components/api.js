@@ -8,7 +8,7 @@ export const fetchImages = async inputValue => {
             image_type: "photo",
             orientation: "horizontal",
             safesearch: true,
-            page,
+            //page,
             per_page: 12,
         }
     });
