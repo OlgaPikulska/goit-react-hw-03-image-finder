@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-//import axios from "axios";
 import styled from "styled-components";
 import { StyledHeader } from "./Header";
 import { fetchImages } from "./api";
