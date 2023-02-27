@@ -6,6 +6,8 @@ import { fetchImages } from "./api";
 import { ImageGallery } from "./ImageGallery";
 import { SearchBar } from "./SearchBar";
 import { StyledButton } from "./Button";
+import { Dna } from 'react-loader-spinner'
+
 
 const StyledApp = styled.div`
     display: grid;
@@ -31,13 +33,15 @@ export class App extends Component {
     }
 
     componentDidMount() {
-        this.handleImagesRequest()
+        if (this.state.query !== "") {
+            this.handleImagesRequest()
+        }
     }
 
     handleImagesRequest = async ({ searchQuery = this.state.query, currentPage = this.state.page } = {}) => {
-        this.setState({ isLoading: true });
-        console.log(searchQuery);
-        console.log(currentPage);
+
+        this.setState({ isLoading: true })
+
         try {
             const images = await fetchImages({ inputValue: searchQuery, page: currentPage });
             this.setState({ images })
@@ -50,7 +54,7 @@ export class App extends Component {
 
     handleClick = () => {
         const { query, page } = this.state;
-        this.setState(prevState => ({ page: prevState.page + 1 }), () => {
+        this.setState(prevState => ({ page: prevState.page + 1, isLoading: true }), () => {
             this.handleImagesRequest({ searchQuery: query, currentPage: page });
         });
     }
@@ -70,7 +74,13 @@ export class App extends Component {
                     <SearchBar handleSubmit={this.handleSubmit} />
                 </StyledHeader>
                 <ImageGallery images={images} />
-                {images.length > 0 && <StyledButton onClick={this.handleClick}>Load More</StyledButton>}
+                {isLoading ? <Dna
+                    visible={true}
+                    height="80"
+                    width="80"
+                    ariaLabel="dna-loading"
+                    wrapperStyle={{ margin: "0 auto" }}
+                    wrapperClass="dna-wrapper" /> : images.length > 0 && <StyledButton onClick={this.handleClick}>Load More</StyledButton>}
             </StyledApp>
         )
     }

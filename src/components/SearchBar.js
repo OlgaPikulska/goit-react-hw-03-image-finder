@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import { AiOutlineSearch } from "react-icons/ai"
 
 const StyledForm = styled.form`
   display: flex;
@@ -16,10 +17,10 @@ const StyledFormButton = styled.button`
   width: 48px;
   height: 48px;
   border: 0;
-  background-image: url('https://image.flaticon.com/icons/svg/149/149852.svg');
-  background-size: 40%;
-  background-repeat: no-repeat;
-  background-position: center;
+  //background-image: url('https://image.flaticon.com/icons/svg/149/149852.svg');
+ //background-size: 40%;
+  //background-repeat: no-repeat;
+  //background-position: center;
   opacity: 0.6;
   transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
@@ -44,7 +45,7 @@ position: absolute;
 const StyledInput = styled.input`
 display: inline-block;
   width: 100%;
-  font: inherit;
+ // font: inherit;
   font-size: 20px;
   border: none;
   outline: none;
@@ -85,6 +86,7 @@ export class SearchBar extends Component {
       <>
         <StyledForm onSubmit={this.handleSubmit}>
           <StyledFormButton type="submit">
+            <AiOutlineSearch size={20} />
             <StyledButtonLabel>Search</StyledButtonLabel>
           </StyledFormButton>
           <StyledInput
