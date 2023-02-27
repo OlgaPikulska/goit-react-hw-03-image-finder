@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import styled from "styled-components";
 import { AiOutlineSearch } from "react-icons/ai"
 
@@ -55,17 +55,16 @@ const INITIAL_STATE = {
   query: "",
 }
 
-export class SearchBar extends Component {
+export class SearchBar extends PureComponent {
   state = { ...INITIAL_STATE };
 
   handleChange = (e) => {
-    const { query, value } = e.target;
+    const { value } = e.target;
     this.setState({ query: value })
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const form = e.currentTarget;
     this.props.handleSubmit({ ...this.state })
     this.reset();
   }

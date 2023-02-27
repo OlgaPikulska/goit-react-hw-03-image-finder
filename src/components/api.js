@@ -13,5 +13,9 @@ export const fetchImages = async ({ inputValue, page }) => {
             per_page: 12,
         }
     });
-    return response.data.hits
+    console.log(response)
+    return {
+        hits: response.data.hits,
+        total: response.data.totalHits
+    }
 }

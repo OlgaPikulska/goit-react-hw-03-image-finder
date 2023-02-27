@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import styled from "styled-components";
 import { StyledHeader } from "./Header";
 import { fetchImages } from "./api";
 import { ImageGallery } from "./ImageGallery";
 import { SearchBar } from "./SearchBar";
 import { StyledButton } from "./Button";
-import { Dna } from 'react-loader-spinner'
-
+import { Loader } from "./Loader";
+import { Error } from "./Error";
 
 const StyledApp = styled.div`
     display: grid;
@@ -22,12 +22,10 @@ const INITIAL_STATE = {
     page: 1,
 }
 
-export class App extends Component {
+export class App extends PureComponent {
     state = { ...INITIAL_STATE }
 
     handleSubmit = (evt) => {
-        console.log(evt)
-        console.log(evt.query)
         this.setState({ query: evt.query, page: 1 });
     }
 
@@ -42,8 +40,15 @@ export class App extends Component {
         this.setState({ isLoading: true })
 
         try {
-            const images = await fetchImages({ inputValue: searchQuery, page: currentPage });
-            this.setState({ images })
+            const fetchedData = await fetchImages({ inputValue: searchQuery, page: currentPage });
+
+            if (currentPage === 1) {
+                this.setState({ images: fetchedData.hits })
+            } else {
+                console.log("Dodają się nowe")
+                this.setState(prevState => ({ images: [...prevState.images, ...fetchedData.hits] }));
+
+            }
         } catch (error) {
             this.setState({ error: error.message })
         } finally {
@@ -52,34 +57,52 @@ export class App extends Component {
     }
 
     handleClick = () => {
-        const { query, page } = this.state;
-        this.setState(prevState => ({ page: prevState.page + 1, isLoading: true }), () => {
-            this.handleImagesRequest({ searchQuery: query, currentPage: page });
+        const { query, page, images } = this.state;
+        console.log("Kliknęłam, powinien się zmieniać stan")
+
+        this.setState(prevState => ({ page: prevState.page + 1, isLoading: true }), async () => {
+            try {
+                const newImages = await fetchImages({ inputValue: query, page: page + 1 })
+                this.setState({ images: [...images, ...newImages] })
+            } catch (error) {
+                this.setState({ error: error.message })
+            } finally {
+                this.setState({ isLoading: false })
+            }
+
         });
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.query !== this.state.query || prevState.page !== this.state.page) {
+        // if (prevState.query !== this.state.query || prevState.page !== this.state.page) {
+        //     window.scrollTo({ top: 0, behavior: "smooth" });
+        //     this.handleImagesRequest({ searchQuery: this.state.query, currentPage: this.state.page })
+        // }
+
+        if (prevState.query !== this.state.query) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            this.handleImagesRequest({ searchQuery: this.state.query, currentPage: this.state.page })
+        }
+
+        if (prevState.page !== this.state.page) {
             this.handleImagesRequest({ searchQuery: this.state.query, currentPage: this.state.page })
         }
     }
 
     render() {
-        console.log(this.state)
-        const { images, isLoading, error } = this.state
+        //console.log(this.state)
+        const { images, isLoading, query } = this.state
         return (
             <StyledApp>
                 <StyledHeader>
                     <SearchBar handleSubmit={this.handleSubmit} />
                 </StyledHeader>
                 <ImageGallery images={images} />
-                {isLoading ? <Dna
-                    visible={true}
-                    height="80"
-                    width="80"
-                    ariaLabel="dna-loading"
-                    wrapperStyle={{ margin: "0 auto" }}
-                    wrapperClass="dna-wrapper" /> : images.length > 0 && <StyledButton onClick={this.handleClick}>Load More</StyledButton>}
+                {isLoading ? <Loader />
+                    :
+                    images.length > 0 &&
+                    <StyledButton onClick={this.handleClick}>Load More</StyledButton>}
+                {images.length === 0 && query && !isLoading && <Error />}
             </StyledApp>
         )
     }
