@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import styled from "styled-components";
 import { StyledHeader } from "./Header";
-import { fetchImages } from "./api";
+import { fetchImages } from "../services/api";
 import { ImageGallery } from "./ImageGallery";
 import { SearchBar } from "./SearchBar";
 import { StyledButton } from "./Button";
@@ -10,9 +10,9 @@ import { Error } from "./Error";
 
 const StyledApp = styled.div`
     display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: 16px;
-  padding-bottom: 24px;
+    grid-template-columns: 1fr;
+    grid-gap: 16px;
+    padding-bottom: 24px;
 `
 const INITIAL_STATE = {
     images: [],
@@ -20,6 +20,7 @@ const INITIAL_STATE = {
     error: null,
     query: "",
     page: 1,
+    lastPage: 1,
 }
 
 export class App extends PureComponent {
@@ -42,10 +43,12 @@ export class App extends PureComponent {
         try {
             const fetchedData = await fetchImages({ inputValue: searchQuery, page: currentPage });
 
+            const lastPage = Math.ceil(fetchedData.total / 12);
+
+
             if (currentPage === 1) {
-                this.setState({ images: fetchedData.hits })
+                this.setState({ images: fetchedData.hits, lastPage: lastPage })
             } else {
-                console.log("Dodają się nowe")
                 this.setState(prevState => ({ images: [...prevState.images, ...fetchedData.hits] }));
 
             }
@@ -58,7 +61,6 @@ export class App extends PureComponent {
 
     handleClick = () => {
         const { query, page, images } = this.state;
-        console.log("Kliknęłam, powinien się zmieniać stan")
 
         this.setState(prevState => ({ page: prevState.page + 1, isLoading: true }), async () => {
             try {
@@ -74,10 +76,6 @@ export class App extends PureComponent {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        // if (prevState.query !== this.state.query || prevState.page !== this.state.page) {
-        //     window.scrollTo({ top: 0, behavior: "smooth" });
-        //     this.handleImagesRequest({ searchQuery: this.state.query, currentPage: this.state.page })
-        // }
 
         if (prevState.query !== this.state.query) {
             window.scrollTo({ top: 0, behavior: "smooth" });
@@ -90,18 +88,18 @@ export class App extends PureComponent {
     }
 
     render() {
-        //console.log(this.state)
-        const { images, isLoading, query } = this.state
+        const { images, isLoading, query, page, lastPage } = this.state
         return (
             <StyledApp>
                 <StyledHeader>
                     <SearchBar handleSubmit={this.handleSubmit} />
                 </StyledHeader>
                 <ImageGallery images={images} />
-                {isLoading ? <Loader />
-                    :
-                    images.length > 0 &&
-                    <StyledButton onClick={this.handleClick}>Load More</StyledButton>}
+                {isLoading && <Loader />}
+                {page !== lastPage && images.length > 0 && !isLoading
+                    ?
+                    <StyledButton onClick={this.handleClick}>Load More</StyledButton>
+                    : null}
                 {images.length === 0 && query && !isLoading && <Error />}
             </StyledApp>
         )

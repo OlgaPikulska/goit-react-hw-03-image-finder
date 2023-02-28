@@ -1,6 +1,8 @@
 import React, { PureComponent } from "react";
 import styled from "styled-components";
 import { AiOutlineSearch } from "react-icons/ai"
+import PropTypes from "prop-types";
+
 
 const StyledForm = styled.form`
   display: flex;
@@ -94,3 +96,7 @@ export class SearchBar extends PureComponent {
     )
   }
 }
+
+SearchBar.propTypes = {
+  onSubmit: PropTypes.func,
+};
